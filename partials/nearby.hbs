@@ -1,0 +1,461 @@
+<div class="bg-[#dc302a] w-full inline-block relative pb-24  pt-14 mt-20   before:content-[''] before:block before:absolute before:bottom-0 before:left-0 before:w-full before:h-[450px]  before:bg-abstra-bg before:bg-cover   before:bg-no-repeat ">
+  <h2 class="text-center mb-10 text-white h1">Nearby Locations</h2>
+  <div class="location-data grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8  lg:px-2.5 2xl:px-10 max-w-full  mx-auto"> </div>
+
+</div>
+
+<script>
+
+  function convertDays(days) {
+    const currentDate = new Date();
+    const dayNumber = currentDate.getDay();
+    const currentSelectedDay = days[dayNumber];
+    const beforeSelected = days.slice(0, dayNumber);
+    const afterSelected = days.slice(dayNumber, days.length);
+    beforeSelected.forEach((element) => {
+      afterSelected.push(element);
+    });
+    return {
+      afterSelected: afterSelected
+    };
+  }
+
+  var days_string = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  $('.time-row').each(function () {
+
+    var day = $(this).attr('data-day');
+    var timeStart = $(this).attr('data-start');
+    var timeEnd = $(this).attr('data-end');
+
+    var today = new Date();
+    var dayName = days_string[today.getDay()];
+
+    $(this).find('.time_start').html(formatTimE(timeStart));
+    $(this).find('.time_end').html(formatTimE(timeEnd));
+
+    if (day) {
+      if (dayName == day) {
+        $(this).addClass('currentDay');
+        $(this).clone().prependTo(".hours-div");
+        $(this).remove();
+      }
+    } else {
+
+      if (dayName == day) {
+        $(this).addClass('currentDay');
+        $(this).clone().prependTo(".hours-div");
+        $(this).remove();
+      }
+
+    }
+
+  });
+
+  const convertedDays = convertDays(days_string);
+  const days = convertedDays.afterSelected;
+
+  let day_html = '';
+  for (let i = 0; i < days.length; i++) {
+    let currentDay = '';
+    if (i == 0) {
+      currentDay = 'currentDay';
+    }
+    day_html += '<div class="time-row flex items-center mb-1 pl-10 xl:pl-8 2xl:pl-10  py-2 relative [&:nth-child(odd)]:bg-black [&:nth-child(odd)]:bg-opacity-5 [&:first-child]:bg-red [&:first-child]:bg-opacity-100 [&:first-child]:text-white ' + currentDay + ' " >'
+    day_html += $('.hours-div').find('.' + days[i]).html();
+    day_html += '</div>';
+  }
+  $('.hours-div').html(day_html);
+
+
+
+  window.dayName = function (currentDate) {
+    return days[currentDate.getDay()];
+  };
+
+  window.formatDate = function (intervalStamp, addDays) {
+    let baseDate = new Date();
+    let hours = intervalStamp / 100;
+    let minutes = intervalStamp % 100;
+    baseDate.setHours(hours);
+    baseDate.setMinutes(minutes);
+    const options = { hour: '2-digit', minute: '2-digit' };
+    if (addDays != undefined) {
+      options.weekday = "short";
+      baseDate.setDate(baseDate.getDate() + addDays);
+    }
+    return baseDate.toLocaleTimeString([], options);
+  };
+  window.getYextTimeWithUtcOffset = function (entityUtcOffsetSeconds) {
+    const now = new Date();
+    let utcOffset = 0;
+    if (entityUtcOffsetSeconds) {
+      utcOffset = entityUtcOffsetSeconds * 1000;
+    }
+    if (utcOffset !== 0) {
+      const localUtcOffset = now.getTimezoneOffset() * 60 * 1000;
+      return new Date(now.valueOf() + utcOffset + localUtcOffset);
+    }
+    return now;
+  };
+  window.parseTimeZoneUtcOffset = function (timeString) {
+    if (!timeString) {
+      return 0;
+    }
+    const parts = timeString.split(":");
+    const hours = parseInt(parts[0].replace(/\u200E/g, ''), 10);
+    const minutes = parseInt(parts[1].replace(/\u200E/g, ''), 10);
+    if (hours < 0) {
+      return -(Math.abs(hours) + minutes / 60) * 60 * 60;
+    }
+    return (hours + minutes / 60) * 60 * 60;
+  };
+  window.dateStringToInt = function (dateString) {
+    return parseInt(dateString.replace(":", ""))
+  };
+  window.getOpenNowString = function (hoursData, utcOffset) {
+    if (!hoursData) {
+      return ""
+    }
+    const now = getYextTimeWithUtcOffset(utcOffset);
+    const tomorrow = new Date(now.getTime() + 60 * 60 * 24 * 1000);
+    const yesterday = new Date(now.getTime() - 60 * 60 * 24 * 1000);
+    const nowTimeNumber = now.getHours() + now.getMinutes() / 60;
+    function getIntervalOnDate(date) {
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+      const dateString = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+      const dayOfWeekString = days[date.getDay()];
+      // Check for holiday
+      if (hoursData.holidayHours) {
+        for (let i = 0; i < hoursData.holidayHours.length; i++) {
+          const holiday = hoursData.holidayHours[i];
+          if (holiday.date == dateString) {
+            if (holiday.openIntervals) {
+              return holiday.openIntervals;
+            } else if (holiday.isClosed === true) {
+              return null; // On holiday but closed
+            }
+          }
+        }
+      }
+      // Not on holiday
+      if (hoursData[dayOfWeekString] && hoursData[dayOfWeekString].openIntervals) {
+        return hoursData[dayOfWeekString].openIntervals;
+      } else {
+        return null;
+      }
+    }
+    function timeStringToNumber(timeString) {
+      const parts = timeString.split(":");
+      const hours = parseInt(parts[0].replace(/\u200E/g, ''), 10);
+      const minutes = parseInt(parts[1].replace(/\u200E/g, ''), 10);
+      return hours + minutes / 60;
+    }
+    function formatTime(time) {
+      const tempDate = new Date("January 1, 2020 " + time)
+      const localeString = 'en-US';
+      const tempTime = tempDate.toLocaleTimeString(localeString.replace('_', '-'), { hour: "numeric", minute: "numeric" });
+      return tempTime;
+    }
+    const intervalsToday = getIntervalOnDate(now);
+    const intervalsTomorrow = getIntervalOnDate(tomorrow);
+    const intervalsYesterday = getIntervalOnDate(yesterday);
+    let openRightNow = false;
+    let currentInterval = null;
+    let nextInterval = null;
+    if (intervalsYesterday) {
+      for (let i = 0; i < intervalsYesterday.length; i++) {
+        const interval = intervalsYesterday[i];
+        const startIntervalNumber = timeStringToNumber(interval.start);
+        const endIntervalNumber = timeStringToNumber(interval.end);
+        // If end overflows to the next day (i.e. today).
+        if (endIntervalNumber < startIntervalNumber) {
+          if (nowTimeNumber < endIntervalNumber) {
+            currentInterval = interval;
+            openRightNow = true;
+          }
+        }
+      }
+    }
+    // Assumes no overlapping intervals
+    if (intervalsToday) {
+      for (let i = 0; i < intervalsToday.length; i++) {
+        const interval = intervalsToday[i];
+        const startIntervalNumber = timeStringToNumber(interval.start);
+        const endIntervalNumber = timeStringToNumber(interval.end);
+        // If current time doesn't belong to one of yesterdays interval.
+        if (currentInterval == null) {
+          if (endIntervalNumber < startIntervalNumber) {
+            if (nowTimeNumber >= startIntervalNumber) {
+              currentInterval = interval;
+              openRightNow = true;
+            }
+          } else if (nowTimeNumber >= startIntervalNumber
+            && nowTimeNumber < endIntervalNumber) {
+            currentInterval = interval;
+            openRightNow = true;
+          }
+        }
+        if (nextInterval == null) {
+          if (startIntervalNumber > nowTimeNumber) {
+            nextInterval = interval
+          }
+        } else {
+          if (startIntervalNumber > nowTimeNumber
+            && startIntervalNumber < timeStringToNumber(nextInterval.start)) {
+            nextInterval = interval;
+          }
+        }
+      }
+    }
+    let nextIsTomorrow = false;
+    // If no more intervals in the day
+    if (nextInterval == null) {
+      if (intervalsTomorrow) {
+        if (intervalsTomorrow.length > 0) {
+          nextInterval = intervalsTomorrow[0];
+          nextIsTomorrow = true;
+        }
+      }
+    }
+    let message = 'Closed';
+    if (openRightNow) {
+      if (currentInterval.start === "00:00" && currentInterval.end === "23:59") {
+        message = 'Open 24 Hours';
+      } else {
+        message = 'Open - Closes at [closingTime]';
+        message = message.replace("[closingTime]", formatTime(currentInterval.end));
+      }
+    } else if (nextInterval) {
+      if (nextIsTomorrow) {
+        message = 'Closed - Opens at [openingTime] tomorrow';
+        message = message.replace("[openingTime]", formatTime(nextInterval.start));
+      } else {
+        message = 'Closed - Opens at [openingTime]';
+        message = message.replace("[openingTime]", formatTime(nextInterval.start));
+      }
+    }
+    return message;
+  };
+
+  function formatTimE(time) {
+    const tempDate = new Date("January 1, 2020 " + time)
+    const localeString = 'en-US';
+    const tempTime = tempDate.toLocaleTimeString(localeString.replace('_', '-'), { hour: "numeric", minute: "numeric" });
+    return tempTime;
+  }
+</script>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+    /// var baseURL = "https://liveapi-sandbox.yext.com/v2/accounts/me/entities/geosearch?";
+    var baseURL = "https://liveapi-sandbox.yext.com/v2/accounts/me/entities/geosearch?";
+    var api_key = "{{global.liveApiKey}}";
+    var vparam = "20181017";
+    var lat = {{latitude}};
+    var lng = {{longitude}};
+    var location = lat + ", " + lng;
+    var limit = 3;
+    var radius = 600;
+   var savedFilterId = "1040219931";
+   var entityTypes = "location";
+   var fields = "hours,name,address,mainPhone,timeZoneUtcOffset,slug";
+  const savedSearchIdString = "";
+  var fullURL =
+    baseURL +
+    "api_key=" +
+    api_key +
+    "&v=" +
+    vparam +
+    "&location=" +
+    location +
+    "&limit=" +
+    (limit + 1) +
+    "&radius=" +
+    radius +
+    "&entityTypes=" +
+    entityTypes +
+    "&fields=" +
+    fields +
+    "&resolvePlaceholders=true" +
+    "&savedFilterId=" +
+    savedFilterId;
+  [].slice
+    .call(document.querySelectorAll(".location-data") || [])
+    .forEach(function (el) {
+      el.innerHTML = '<div class="text-center col-span-3">Loading...</div>';
+    });
+  //$.get(fullURL, function (data) {
+  fetch(fullURL).then(response => response.json()).then(data => {
+    //entities = data.response.entities;
+    entities = data.response.entities;
+    [].slice
+      .call(document.querySelectorAll(".location-data") || [])
+      .forEach(function (el) {
+        el.innerHTML = "";
+      });
+    if (
+      entities.length == 0 ||
+      (entities.length == 1 && entities[0].meta.id == "{{id}}")
+    ) {
+      [].slice
+        .call(document.querySelectorAll(".location-data") || [])
+        .forEach(function (el) {
+          el.innerHTML = '<div class="text-center col-span-3">No Locations Found</div>';
+        });
+    }
+    for (var i = 1; i < entities.length; i++) {
+      location = entities[i];
+      locationHTML = "";
+      const parsedOffset = parseTimeZoneUtcOffset(location.timeZoneUtcOffset);
+      //style="width:80%;height:auto;padding-top:2rem;padding-bottom:2rem;
+      //style="width:100%;height:auto;        
+      if (true) {
+        if (location.websiteUrl) {
+          locationHTML =
+            '<div class="location bg-white px-4 lg:px-8 xl:px-16 py-5 shadow-lg rounded-lg lg:py-9"><div class="address-cta-column"><h5 class="name mb-5 font-bold"><a  class=""	href="' + location.slug + '.html">' +
+            location.name +
+            '</a></div><a class="address" href="' + location.slug + '.html"><svg xmlns="http://www.w3.org/2000/svg"  height="48" viewBox="0 0 48 48" width="48"><path d="M0 0h48v48H0z" fill="none"/> <g> <path d="M24,4c-7.732,0-14,6.268-14,14c0,14,14,26,14,26s14-12,14-26C38,10.268,31.732,4,24,4z M24,41.26 C20.65,37.967,12,28.451,12,18c0-6.617,5.383-12,12-12s12,5.383,12,12C36,28.452,27.349,37.968,24,41.26z"/> <circle cx="24" cy="18" r="2"/> </g> </svg><div>' +
+            location.address.line1 +
+            '</div><div class="address-line-2">' +
+            location.address.city + ', ' + location.address.region + ' ' + location.address.postalCode + ' ' + location.mainPhone +
+            '</div></a></div>'
+          //'<a href="tel:' + location.mainPhone + '" class="phone"><svg xmlns="http://www.w3.org/2000/svg"  height="48" viewBox="0 0 48 48" width="48"><path d="M0 0h48v48H0z" fill="none"/> <g> <rect x="21" y="10" width="6" height="2"/> <circle cx="24" cy="36" r="2"/> <path d="M32,44c2.2,0,4-1.8,4-4V8c0-2.2-1.8-4-4-4H16c-2.2,0-4,1.8-4,4v32c0,2.2,1.8,4,4,4H32z M14,40V8c0-1.103,0.897-2,2-2h16 c1.103,0,2,0.897,2,2v32c0,1.103-0.897,2-2,2H16C14.897,42,14,41.103,14,40z"/> </g> </svg>' + location.c_sales + '</a>';
+        } else {
+              locationHTML =
+            '<div class="location bg-white px-4 lg:px-8 xl:px-16 shadow-lg rounded-lg py-5 lg:py-9"><div class="address-cta-column"><h5 class="name mb-5 font-bold"><a  class=""	href="' + location.slug + '.html">' +
+            location.name +
+            '</a></h5><div class="inline-block w-full nearbyaddress"><svg xmlns="http://www.w3.org/2000/svg"  height="48" viewBox="0 0 48 48" width="48"><path d="M0 0h48v48H0z" fill="none"/> <g> <path d="M24,4c-7.732,0-14,6.268-14,14c0,14,14,26,14,26s14-12,14-26C38,10.268,31.732,4,24,4z M24,41.26 C20.65,37.967,12,28.451,12,18c0-6.617,5.383-12,12-12s12,5.383,12,12C36,28.452,27.349,37.968,24,41.26z"/> <circle cx="24" cy="18" r="2"/> </g> </svg><a class="address" href="' + location.slug + '"><div>' +
+            location.address.line1 +
+            '</div><div class="address-line-2">' +
+            location.address.city + ', ' + location.address.region + ' ' + location.address.postalCode +
+            '</div></a></div></div>'+
+           '<div class="inline-block w-full nearbyphone"><svg xmlns="http://www.w3.org/2000/svg"  height="48" viewBox="0 0 48 48" width="48"><path d="M0 0h48v48H0z" fill="none"/> <g> <rect x="21" y="10" width="6" height="2"/> <circle cx="24" cy="36" r="2"/> <path d="M32,44c2.2,0,4-1.8,4-4V8c0-2.2-1.8-4-4-4H16c-2.2,0-4,1.8-4,4v32c0,2.2,1.8,4,4,4H32z M14,40V8c0-1.103,0.897-2,2-2h16 c1.103,0,2,0.897,2,2v32c0,1.103-0.897,2-2,2H16C14.897,42,14,41.103,14,40z"/> </g> </svg><a href="tel:' + location.mainPhone + '" class="phone">' + location.mainPhone+ '</a></div>' + '<div class="open-close-time inline-block w-full mt-12">' + window.getOpenNowString(location.hours, parsedOffset) + '</div>'
+            + '<a href="https://www.google.com/maps/dir/?api=1&origin='+lat+','+lng+'&destination='+location.address.line1+' " class=" mt-5 relative bg-[#fff] text-sm border border-[#004b97] text-[#1B1C1C] py-2.5 px-5 rounded-md mt-2 mr-2 inline-block">' + 'Get Direction'  + '</a>' ;
+        }
+        //console.log(locationHTML);
+        [].slice
+          .call(document.querySelectorAll(".location-data") || [])
+          .forEach(function (el) {
+            el.innerHTML += locationHTML;
+          });
+      }
+    }
+  });
+
+  var entityId ='{{id}}';
+
+  var entURL = "https://liveapi-sandbox.yext.com/v2/accounts/me/entities/" + entityId + '?';
+
+  var fullURL =
+    entURL +
+    "api_key=" +
+    api_key +
+    "&v=" +
+    vparam +
+    "&limit=" +
+    limit +
+    "&entityTypes=" +
+    entityTypes +
+    "&savedFilterId=" +
+    savedFilterId;
+
+  fetch(fullURL).then(response => response.json()).then(result => {
+    if (!result.errors) {
+      var hours = result.response.hours;
+      var parsedOffset = parseTimeZoneUtcOffset(result.response.timeZoneUtcOffset);
+      var openingCloseTime = window.getOpenNowString(hours, parsedOffset);
+      // $('.closeing-div').html(openingCloseTime);			
+      [].slice
+        .call(document.querySelectorAll(".closeing-div") || [])
+        .forEach(function (el) {
+          el.innerHTML = openingCloseTime;
+        });
+    } else {
+
+    }
+  });
+	
+  });
+  $(document).ready(function () {
+
+    $(".get-direction-url").click(function (e) {
+      var latitude = $(this).attr('data-latitude');
+      var longitude = $(this).attr('data-longitude');
+
+      let user_latitude = getCookie('user_latitude');
+      let user_longitude = getCookie('user_longitude');
+
+      if (user_latitude && user_longitude) {
+        var direction_url = 'https://www.google.com/maps/dir/?api=1&destination=' + latitude + ',' + longitude + '&origin=' + user_latitude + ',' + user_longitude;
+        window.open(direction_url, '_blank');
+      } else {
+        getDirectionUrl(latitude, longitude);
+      }
+
+    });
+
+  });
+
+  function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function getDirectionUrl(latitude, longitude) {
+    $(".error-text").html("");
+    if (navigator.geolocation) {
+      const error = (error) => {
+        /* 
+        if(error.code == 1){ 
+          $(".error-text").html("Unable to determine your location.");
+        }else{
+          $(".error-text").html("Unable to determine your location.");			
+        }
+        */
+        var message_string = 'Unable to determine your location. please share your location';
+        if (confirm(message_string) != true) {
+          var getDirectionUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + latitude + ',' + longitude;
+          window.open(getDirectionUrl, '_blank');
+        } else {
+          return false;
+        }
+      }
+      navigator.geolocation.getCurrentPosition(function (position) {
+        currentLatitude = position.coords.latitude;
+        currentLongitude = position.coords.longitude;
+        setCookie("user_latitude", currentLatitude, 1);
+        setCookie("user_longitude", currentLongitude, 1);
+
+        var direction_url = 'https://www.google.com/maps/dir/?api=1&destination=' + latitude + ',' + longitude + '&origin=' + currentLatitude + ',' + currentLongitude;
+        window.open(direction_url, '_blank');
+      }, error, {
+        timeout: 10000,
+      });
+
+    };
+  }
+
+</script>

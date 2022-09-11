@@ -1,0 +1,58 @@
+---
+{
+"urlFormat" : "index.html"
+}
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{>head }}
+    <title>Store Locator</title>    
+    <script>
+        console.log("defining initMaps Functions");
+        var initMapsFunctions = [];
+        var initMaps = function (noKey) {
+            for (i = 0; i < initMapsFunctions.length; i++) {
+                initMapsFunctions[i](noKey);
+            }
+        }
+    </script>
+    <script>        
+        var head = document.getElementsByTagName('head')[0];
+        // Save the original method
+        var insertBefore = head.insertBefore;
+        // Replace it!
+        head.insertBefore = function (newElement, referenceElement) {
+            if (newElement.href && newElement.href.indexOf('//fonts.googleapis.com/css?family=Roboto') > -1) {
+
+                console.info('Prevented Roboto from loading!');
+                return;
+            }
+            insertBefore.call(head, newElement, referenceElement);
+        };
+        function loadScriptAsync(url) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.type = 'text/javascript';
+                script.async = true;
+                script.defer = true;
+                script.onload = resolve;
+                script.onerror = reject;
+                script.src = url;
+                document.head.appendChild(script);
+            });
+        }
+        window.mapsLoader = loadScriptAsync("https://maps.googleapis.com/maps/api/js?key={{global.googleApiKey}}&callback=initMaps&libraries=places");
+    </script>
+</head>
+<body class="" id="body" >
+    {{!-- {{>nav}} --}}
+<div class="filtering"></div>
+Filter:-<div class="loccatile-filter"></div>
+{{!-- Services:-<div class="loccatileservice-filter" id="servicefilter"></div> --}}
+<div id="query-search" class="k1"></div>
+
+    {{>locator}}
+    {{!-- {{>footer}} --}}
+</body>
+</html>

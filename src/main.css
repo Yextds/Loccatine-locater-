@@ -1,0 +1,306 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+
+
+body{
+  @apply font-universpro font-normal text-darkgrey text-[15px] leading-6 overflow-x-hidden;
+}
+h1, .h1{
+  @apply text-[26px] md:text-[30px] leading-[1.2] font-universpro font-semibold;
+}
+
+h2, .h2{
+  @apply text-[20px] md:text-[22px] leading-[1.2] font-universpro font-semibold;
+}
+
+h3, .h3{
+  @apply text-[18px] md:text-[20px] leading-[1.2] font-universpro font-semibold;
+}
+
+h4, .h4{
+  @apply text-[17px] md:text-[18px] leading-[1.3] lg:leading-[1.2] font-universpro font-semibold;
+}
+
+h5, .h5{
+  @apply text-[16px] leading-[1.3] lg:leading-[1.2] font-universpro font-semibold;
+}
+
+h6, .h6{
+  @apply text-[15px] leading-[1.3] lg:leading-[1.2] font-universpro font-semibold;
+}
+
+h1.light, .pagebuilderComponents .light.banner_title, h2.light, h3.light, h4.light, h5.light, h6.light{
+  @apply font-medium;
+}
+
+.button{
+  @apply inline-block font-universpro px-5 pt-1 pb-0.5 leading-8 border border-darkgrey rounded-none focus:outline-none text-[15px] text-darkgrey cursor-pointer no-underline;
+}
+.button:disabled{
+  @apply opacity-40 cursor-not-allowed; 
+}
+.button.button--primary{
+  @apply text-white bg-darkgrey border border-transparent transition duration-300;
+}
+.button.button--primary:hover{
+  @apply bg-black border-transparent text-white;
+}
+.button.button--secondary{
+  @apply text-white bg-[#dc302a] border border-transparent transition duration-300;
+}
+.button.button--secondary:hover{
+  @apply lg:border-darkgrey;
+}
+.button.button--primary_ghost{
+  @apply text-darkgrey bg-transparent border border-darkgrey transition duration-300;
+}
+.button.button--primary_ghost:hover{
+  @apply bg-darkgrey text-white;
+}
+.button.button--small{
+  @apply leading-8 pb-0 text-sm;
+}
+.button.button--large{
+  @apply leading-[36px] pb-0 text-base;
+}
+
+/* Form Css */
+input[type=text], input[type=email], input[type=tel], input[type=date], input[type=number], input[type=password] {
+  @apply w-full pt-2 pb-1 px-5 border border-lightBorder h-10 text-[15px] rounded-none bg-white font-universpro font-normal outline-none focus:outline-none;
+}
+textarea {
+  @apply w-full py-[15px] px-5 border border-lightBorder h-10 text-[15px] rounded-none bg-white font-universpro font-normal outline-none focus:outline-none;
+}
+
+/* Header Start */
+.nav-full.show{
+  @apply !translate-x-0;
+}
+
+.desktop-nav .meganav .internalWrapper h5, .desktop-nav .meganav .internalWrapper .h5, .desktop-nav .meganav .internalWrapper .h6, .desktop-nav .meganav .internalWrapper .h4{
+  @apply mb-2.5;
+}
+.desktop-nav .meganav .internalWrapper .col1 ul + .h4, .desktop-nav .meganav .internalWrapper .col1 ul + h5, .desktop-nav .meganav .internalWrapper .col1 ul + .h5, .desktop-nav .meganav .internalWrapper .col1 ul + .h6{
+  @apply mt-[26px];
+}
+
+
+
+
+/* Header End */
+
+/* Footer Start */
+.footer-links h5.active{
+  @apply bg-minusIcon;
+}
+/* Footer end */
+
+/* Filter */
+.selectedFilterDiv li:not(:last-child){
+  @apply mr-2;
+}
+.selectedFilterDiv .filterItem{
+  @apply mr-2 inline-block align-top leading-7;
+}
+.selectedFilterDiv a{
+  @apply bg-closeIcon bg-no-repeat bg-[10px_center] bg-[length:14px_14px] inline-block mb-2.5 bg-lightgrey pr-2.5 pl-8 pt-1; 
+}
+
+.result-list{
+  @apply lg:max-h-[calc(100vh_-_272px)] overflow-hidden overflow-y-auto;
+}
+.result-list .result{
+  @apply border border-lightgrey mb-1.5 md:mb-2.5 relative pt-3 md:pt-4 pb-2 md:pb-4 p-8 md:pl-4 pr-3 md:pr-4 text-sm md:text-[15px];
+}
+.result-list .result:hover, .result-list .result.active{
+  @apply bg-lightbg;
+}
+.result-list .result h4{
+  @apply text-[15px] leading-[22px] md:text-[17px] inline-block w-full;
+}
+.result-list .result h4.storelocation-name{
+	@apply mb-2;
+}
+.result-list .result h4.storelocation-name a{
+  @apply inline-block;
+}
+.result-list .result .address{
+	@apply leading-[22px] mt-0 text-[#666] before:bg-phoneIcon  before:content-[''] before:ml-0.5 before:w-12 before:h-12  ;
+}
+.result-list .result .distance{
+	@apply !mt-0 text-[#666];
+}
+
+
+.lp-subparam-hours{
+  @apply font-bold my-1 md:my-2;
+}
+.lp-param-results .link{
+  @apply underline;
+}
+.lp-param-results .link a{
+  @apply inline-block;
+}
+.left-column{
+  @apply absolute top-2 md:top-3 left-2 md:left-6 w-5 h-7 bg-pinIcon bg-no-repeat bg-center text-transparent text-[0px] bg-[length:25px];
+}
+
+
+
+
+
+
+
+.department-list{
+  @apply flex flex-wrap max-h-[calc(100vh_-_128px)] md:max-h-[calc(100vh_-_200px)] min-h-[calc(100vh_-_128px)] md:min-h-[0px] overflow-x-hidden overflow-y-auto;
+}
+.department-list li{
+  @apply w-1/2 md:w-1/3 mb-4 relative;
+}
+.department-list li .checkbox_departments{
+  @apply absolute top-0 left-0 opacity-0 invisible;
+}
+.department-list li label{
+  @apply pl-7 cursor-pointer;
+} 
+.department-list li label:before{
+  @apply content-[''] absolute top-0 left-0 border border-lightBorder w-[18px] h-[18px];
+}
+.department-list li .checkbox_departments:checked + label:before{
+  @apply bg-darkgrey;
+}
+.department-list li .checkbox_departments:checked + label:after{
+  @apply content-[''] absolute top-1 left-[3px] w-3 h-1.5 transform -rotate-45 border-b-2 border-l-2 border-white;
+}
+
+.input-group .search_key{
+  @apply bg-lightgrey border border-lightgrey h-10 md:h-14 focus:border-red_tint;
+}
+
+.nameData a{
+  @apply outline-none focus:outline-none focus:shadow-none;
+}
+.addressData .phone{
+  @apply mt-1.5 md:mt-2.5;
+}
+.openCloseTimeData li{
+  @apply flex flex-wrap w-full;
+}
+.openCloseTimeData li .daydiv{
+  @apply w-10 md:w-16 text-sm font-normal capitalize;
+}
+.openCloseTimeData li span{
+  @apply w-[calc(100%_-_40px)] md:w-[calc(100%_-_64px)] pl-0;
+}
+div[role="dialog"] button[aria-label="Close"]{
+  @apply !right-0 !top-0 z-10;
+}
+
+.location-data .location .address{
+  @apply relative inline-block align-bottom;
+}
+.location-data .location .nearbyaddress{
+  @apply pl-7 relative;
+}
+.location-data .location .nearbyaddress svg{
+  @apply absolute top-0 left-0 w-6 h-6 ;
+}
+.location-data .location .address > div{
+  @apply leading-7;
+}
+.location-data .location .nearbyphone{
+  @apply relative pl-7;
+}
+.location-data .location .phone{
+  @apply leading-7 inline-block;
+}
+.location-data .location .nearbyphone svg{
+  @apply absolute top-0 left-0  w-6 h-6 ;
+}
+.time-row{ @apply xl:text-xs}
+
+.time-row.currentDay{
+  @apply before:content-[''] before:absolute before:top-2.5 before:xl:top-0.5 before:2xl:top-2.5 before:left-1 before:w-6 before:h-6 before:rounded before:bg-black after:content-[''] after:absolute after:top-3.5   after:xl:top-2 after:2xl:top-3.5 after:left-2.5 after:w-3.5 after:h-2 after:transform after:-rotate-45 after:border-b after:border-l after:border-white;
+}
+.owl-carousel .owl-prev{
+  @apply absolute top-1/2 left-0 w-10 h-10 !border !border-darkgrey rounded-full !bg-white !bg-leftIcon !bg-no-repeat !bg-center !bg-[length:20px_20px] -mt-5;
+}
+.owl-carousel .owl-prev span{
+  @apply hidden;
+}
+.owl-carousel .owl-next{
+  @apply absolute top-1/2 right-0 w-10 h-10 !border !border-darkgrey rounded-full !bg-white !bg-rightIcon !bg-no-repeat !bg-center !bg-[length:20px_20px] -mt-5;
+}
+.owl-carousel .owl-next span{
+  @apply hidden;
+}
+
+img[style="width: 340px; height: 240px;"]{
+  @apply !w-0 !h-0;
+}
+
+#map, #map *{
+  @apply font-universpro;
+}
+
+.owl-carousel .owl-nav.disabled, .owl-carousel .owl-dots.disabled{
+	@apply !block;
+}
+
+.markerContent .nameData a{@apply inline-block;}
+
+.location-dtl h1{ @apply text-2xl mt-2 mb-1 }
+
+.button-area{ @apply flex mt-4  items-center  }
+
+.direction-url { @apply border no-underline h-8 border-red px-4 py-2 rounded-lg }
+.subrton { @apply border no-underline h-8 border-red px-4 py-2 rounded-lg }
+.form-check{ @apply flex items-center mr-4 w-32} 
+.newsletter{ @apply bg-mid-bg py-10 inline-block w-full my-8 }
+.phone-bx-loc{ @apply ml-6 mb-0 text-base relative min-h-[24px] inline-block before:content-[''] before:absolute before:w-7 before:h-7 before:-top-1 before:-left-7 before:pointer-events-none before:bg-phoneIcon before:bg-no-repeat before:bg-[length:20px_20px] before:bg-center before:rounded-full }
+
+.phone-bx a{ @apply ml-10 mb-3 text-base relative min-h-[28px] inline-block before:content-[''] before:absolute before:w-7 before:h-7 before:top-0 before:-left-10 before:pointer-events-none before:bg-phoneIcon before:bg-no-repeat before:bg-[#dc302a] before:bg-[length:20px_20px] before:bg-center before:rounded-full }
+
+.address-side{@apply pl-10 text-base min-h-[28px] mb-2 relative inline-block w-full before:content-[''] before:absolute before:w-7 before:h-7 before:top-0 before:left-0 before:bg-pinIcon before:bg-no-repeat before:bg-[#dc302a] before:bg-[length:20px_20px] before:bg-center before:rounded-full}
+.open-now-string {    @apply cursor-pointer inline-block relative}
+.open-now-string::after {    content: '';    border-left: 7px solid transparent;   position: absolute; top: 5px;  border-right: 7px solid transparent;    border-top: 10px solid #dc302a;    vertical-align: middle;    display: inline-block;    margin-left: 10px}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@import "tailwindcss/utilities";
+

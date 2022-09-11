@@ -1,0 +1,45 @@
+<div class="flex flex-wrap ">
+	{{!-- <div class='address  w-full pl-2.5 2xl:pl-5 pr-10'>
+		<div id="address"
+			class="pl-10 text-base min-h-[28px] mb-2 relative inline-block w-full before:content-[''] before:absolute before:w-7 before:h-7 before:top-0 before:left-0 before:bg-pinIcon before:bg-no-repeat before:bg-purple before:bg-[length:20px_20px] before:bg-center before:rounded-full">
+			<div class="text-xl">{{geomodifier}}</div>
+			<div>{{address.line1}}</div>
+			<div>{{address.city}}, {{address.region}} {{address.postalCode}}</div>
+			<div>{{address.countryCode}}</div>
+		</div> --}}
+		{{!-- <div class="inline-block w-full">
+			<a href="tel:{{phoneNumber 'uk' mainPhone 'INTERNATIONAL'}}"
+				class="ml-10 text-base relative min-h-[28px] inline-block before:content-[''] before:absolute before:w-7 before:h-7 before:top-0 before:-left-10 before:pointer-events-none before:bg-phoneIcon before:bg-no-repeat before:bg-purple before:bg-[length:20px_20px] before:bg-center before:rounded-full">
+				{{phoneNumber "uk" mainPhone "INTERNATIONAL"}}</a>
+		</div> --}}
+
+	
+	<div class="hours w-full  px-2.5 2xl:px-3 mt-5 md:mt-0">
+		<div class=" test-main">
+			<div class="p-4 md:p-2">
+				<h2 class=" mt-1 mb-2 border-b border-[#dc302a]  uppercase sales text-lg">Store Hours</h2>
+				<div class="hours-div mt-4 ">{{>hours hours}}</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	{{!-- {{>staticmap geocodedCoordinate}} --}}
+</div>
+
+{{!-- {{#if c_pageDescription}}
+<div class='departments w-full bg-lightbg py-10 px-2.5 2xl:px-10'>
+	<h2 class="h1 text-center mb-10">Department Store</h2>
+	<ul class="storelocation-available-categories owl-carousel owl-theme px-14 md:px-16">
+
+		{{#each c_pageServices}}
+		<li class="storelocation-category text-center bg-white p-3 md:p-5 w-full rounded-md min-h-[156px]"
+			data-name={{this}}><img class="mx-auto mb-5 !w-[44px] h-12 object-contain object-center"
+				src=images/{{this}}.svg alt="" width="44" height="44"> {{replace this "_" " " }} </li>
+		{{/each}}
+
+	</ul>
+</div>
+{{/if}} --}}

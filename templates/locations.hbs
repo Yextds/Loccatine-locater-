@@ -1,0 +1,126 @@
+---
+{
+"stream": {
+"$id": "location-details-loccatine",
+"source": "knowledgeGraph",
+"destination": "pages",
+"filter" : {
+"entityTypes": [
+"location"
+],
+"savedFilterIds":[
+"1040219931"
+]
+},
+"fields": [
+"id",
+"uid",
+"meta",
+"name",
+"address",
+"description",
+"hours",
+"photoGallery",
+"slug",
+"mainPhone",
+"geocodedCoordinate",
+"yextDisplayCoordinate",
+"c_photoGallery2",
+"c_aboutch",
+"c_description1",
+"c_cTA"
+],
+"localization": {
+"locales": ["en"]
+}
+},
+"urlFormat": "{{slug}}"
+}
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>head }}
+    <title>Store Locator</title>
+    <meta name="robots" content="nofollow, noindex" />
+    <link rel="shortcut icon" type="image/jpg" href="/images/yext-favicon.png" />
+    <script src="https://maps.googleapis.com/maps/api/js?callback=myMap" async></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+
+<body class="">
+    {{!-- {{>nav}} --}}
+    <h1 class="text-uppercase w-full  text-center  text-black  text-5xl ">{{name}}</h1>
+    <div
+        class="flex  flex-wrap text-2xl md:text-4xl uppercase py-7  lg:py-14 items-center px-5 text-center lg:px-10 md:px-auto justify-around md:justify-around text-[#575656]">
+        <h2 class=" text-xl md:text-3xl closeing-div"> <span class="text-[#dc302a]"></span></h2>
+    </div>
+
+
+
+    <div class=" lg:px-2.5 2xl:px-10 max-w-full  mx-auto">
+        <div class=" flex flex-col lg:flex-row  test-main   px-4">
+
+            <div class="  flex flex-col  lg:flex-row gap-6 xl:gap-2 2xl:gap-6   w-full lg:w-1/2  mr-5 xl:mr-2 2xl:mr-5">
+
+                <div class=" bg-[#fafafa]  mt-8 lg:mt-0 py-2 w-full lg:w-1/2" id="hours">
+
+                    <div class="w-full px-4">
+
+                        <div class="test-div">
+
+                            <div class="address-side">{{>locationaddress}}</div>
+                        </div>
+                    </div>
+                    <div class="lp-param-results lp-subparam-getDirectionsLabel mt-4 ml-5">
+                        <a class="button button--secondary button--large font-bold get-direction-url"
+                            href="javascript::void(0);" data-latitude={{geocodedCoordinate.latitude}}
+                            data-longitude={{geocodedCoordinate.longitude}}>
+                            Get Directions
+                        </a>
+                    </div>
+                    <div class="error-text mt-2 leading-[20px] text-red"></div>
+
+                </div>
+
+                <div class="w-full lg:w-1/2 bg-[#fafafa]  mt-8 lg:mt-0 py-2" id="hours">{{>locationdetails}}</div>
+            </div>
+
+            <div class="w-full lg:w-1/2 order-1 lg:order-2">
+                {{>staticmap}}
+            </div>
+        </div>
+    </div>
+    <h2 class="py-5 text-center my-6  text-4xl text-black">About {{name}}</h2>
+    <div class=" mt-36  lg:px-2.5 2xl:px-10 max-w-full  mx-4 lg:mx-0  w-full flex flex-col lg:flex-row">
+        <div class=" w-full lg:w-1/2"> <img class="w-full " src="{{c_photoGallery2.[0].image.url}}" alt="" /></div>
+        <div class=" w-full inline-block ">
+            <div
+                class="bg-[#dc302a] w-full inline-block ml-0 lg:-ml-6 rounded-2xl relative p-7 -mt-32   before:content-[''] before:block before:absolute before:bottom-0 before:left-0 before:w-full   before:bg-abstra-bg before:bg-cover   before:bg-no-repeat ">
+
+                <div class="flex ab-sec-main flex-col">
+                    {{#each c_aboutch}}
+                    <div class="flex border mb-8  ab-sec-inner border-white rounded p-4 text-white flex-row">
+                        <div class="w-full">
+                            <h1>{{title}}</h1>
+                            <p class="comment more">{{description}}</p>
+                            <a href="{{c_cTA.uRL}}"
+                                class="text-golden  text-center mt-2 font-bold no-underline hover:underline ...">{{c_cTA.primaryCTA}}</a>
+
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{>nearby geocodedCoordinate}}
+{{!-- 
+    {{>footer}} --}}
+
+</body>
+
+</html>

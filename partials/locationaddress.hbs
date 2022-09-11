@@ -1,0 +1,11 @@
+<div class="flex flex-col">
+    <div class='address address-info text-base  mb-2'>
+        <a id="address" class="hover:underline relative inline-block w-full " href="https://www.google.com/maps/dir/?api=1&destination={{address.line1}} {{address.city}} {{address.region}} {{address.postalCode}}" target="_blank">
+            <div>{{address.line1}} {{address.line2}} {{address.city}}, {{address.region}} {{address.postalCode}} {{address.countryCode}}</div>
+        </a>
+    </div>
+    <div class="phone address-info relative inline-block w-full text-base md:text-xl leading-10">
+         {{phoneNumber "US" mainPhone "NATIONAL"}}
+    </div>
+</div>
+
